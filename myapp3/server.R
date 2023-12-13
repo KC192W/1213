@@ -1,25 +1,18 @@
-function(input, output, session) {
+library(shiny)
+
+# Define server logic required to generate and plot a random distribution
+shinyServer(function(input, output) {
   
-  # input$date and others are Date objects. When outputting
-  # text, we need to convert to character; otherwise it will
-  # print an integer rather than a date.
-  output$dateText  <- renderText({
-    paste("input$date is", as.character(input$date))
+  # Expression that generates a plot of the distribution. The expression is
+  # wrapped in a call to renderPlot to indicate that:
+  # 
+  # 1) It is 'reactive' and therefore should be automatically re-executed
+  # when inputs change 2) Its output type is a plot
+  output$distPlot = renderPlot({
+    
+    # generate an rnorm distribution and plot it
+    dist = rnorm(input$obs,mean=input$M,sd=input$S)
+    hist(dist,col=input$Color)
   })
   
-  output$dateText2 <- renderText({
-    paste("input$date2 is", as.character(input$date2))
-  })
-  
-  output$dateRangeText  <- renderText({
-    paste("input$dateRange is", 
-          paste(as.character(input$dateRange), collapse = " to ")
-    )
-  })
-  
-  output$dateRangeText2 <- renderText({
-    paste("input$dateRange2 is", 
-          paste(as.character(input$dateRange2), collapse = " to ")
-    )
-  })
-}
+})
